@@ -11,6 +11,7 @@ pages-jquery-gulp-webpack-karma
 - 代码格式检查：jshint & htmlPrettify (sublime插件)
 - 支持es6：    babel
 - 支持scss：   gulp-sass
+- 支持jade     gulp-jade
 - 支持md5：    gulp-rev & rev-del &  gulp-rev-collector
 - 支持压缩：    gulp-htmlmin & Uglify
 - 支持自动刷新： livereload
@@ -38,7 +39,9 @@ pages-jquery-gulp-webpack-karma
 
   -- images：压缩后的图片
 
-  -- index.html： 压缩后的html
+  -- app： 压缩后的html
+
+  -- fonts: 字体文件
 
 -- doc 项目文档目录
 > -- index.html 文档主页
@@ -52,8 +55,9 @@ pages-jquery-gulp-webpack-karma
 
   -- images：图片
 
-  -- index.html： 主页
-
+  -- app： jade页面
+	
+  -- fonts: 字体文件
 
 -- test 项目测试
 > -- coverage 覆盖率检测，结果在./coverage/**/index.html中

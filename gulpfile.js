@@ -1,6 +1,7 @@
 // 载入插件
 var gulp = require('gulp'),
   sass = require('gulp-sass'), // 编译并压缩sass
+  jade = require('gulp-jade'), // 编译jade
   sourcemaps = require('gulp-sourcemaps'), // 生成sourcemap
   autoprefixer = require('gulp-autoprefixer'), // css前缀
   imagemin = require('gulp-imagemin'), // 最小化图片
@@ -21,10 +22,11 @@ var gulp = require('gulp'),
 
 var revTask = { // 修改html中引用文件的版本，以及js和css文件中sourcemap文件的版本
   html: function() {
-    gulp.src(['dist/**/*.json', 'src/index.html'])
+    gulp.src(['dist/**/*.json', 'src/app/*.jade'])
       .pipe(revCollector({ replaceReved: true }))
+      .pipe(jade())
       .pipe(htmlmin({ collapseWhitespace: true }))
-      .pipe(gulp.dest('dist'));
+      .pipe(gulp.dest('dist/app'));
   },
   css: function() {
     gulp.src(['dist/styles/*.json', 'dist/styles/*.css'])
@@ -82,14 +84,6 @@ gulp.task('scripts', function(callback) {
         }));
         callback();
   });
-  // return gulp.src('src/scripts/main.js')
-  //   .pipe(webpack(webpackConfig))
-  //   .pipe(rev())
-  //   .pipe(gulp.dest('dist/scripts')) // 生成压缩后的文件
-  //   .pipe(rev.manifest('js-mainfest.json'))
-  //   .pipe(revDel({ dest: './dist/scripts' }))
-  //   .pipe(gulp.dest('dist/scripts')) // 输出rev对应文件
-  //   .pipe(notify({ message: '脚本完成' }));
 });
 
 // 图片处理
@@ -107,13 +101,19 @@ gulp.task('images', function() {
     }));
 });
 
+// 字体处理
+gulp.task('copyfont',function(){
+  return gulp.src('src/fonts/*')
+     .pipe(gulp.dest('dist/fonts'));
+});
+
 // 静态文件服务器
 gulp.task('webserver', ['htmlrev'], function() {
   gulp.src('')
     .pipe(webserver({
       port: 8888,
       directoryListing: true,
-      open: 'http://localhost:8888/dist/index.html'
+      open: 'http://localhost:8888/dist/app/index.html'
     }));
 });
 
@@ -137,14 +137,14 @@ gulp.task('clean', function() {
 
 // 默认任务
 gulp.task('default', ['clean'], function() {
-  gulp.start('images', 'webserver');
+  gulp.start('images', 'copyfont','webserver');
 });
 
 // 动态跟踪
 gulp.task('watch', function() {
   gulp.start('default');
   // 看守所有html档
-  gulp.watch('src/*.html', ['html']);
+  gulp.watch('src/app/*.jade', ['html']);
   // 看守所有.scss档
   gulp.watch('src/styles/**/*.scss', ['styles', 'htmlcss']);
   // 看守所有.js档

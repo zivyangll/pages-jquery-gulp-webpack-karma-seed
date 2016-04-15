@@ -1,0 +1,39 @@
+{
+  // 进入严格模式,要求你使用'use strict;'语法
+  "strict": false,
+  // 禁用位运算操作符
+  "bitwise": true,
+  // 浏览器模式
+  "browser": true,
+  // 要求所有的非全局变量,在使用前都被声明
+  "undef": true,
+  // 提醒定义了、但未使用过的的变量、函数
+  "unused": true,
+  // 要求你在使用if和while等结构语句时加上{}来明确代码块
+  "curly": true,
+  // 使用全等操作符
+  "eqeqeq": true,
+  // 如果为真，那么，JSHint允许在for in 循环里面不出现hasOwnProperty
+  "newcap": true,
+  // 禁止arguments.caller和arguments.callee的使用
+  "noarg": true,
+  // 依据严格的空白规范检查你的代码
+  "white": true,
+  // 只能使用单引号
+  //"quotmark": "single",
+  // 如果为true，指定运行环境为node.js
+  "node": true,
+  // js版本为6
+  //"esversion": 6,
+  "esnext": true,
+  // 允许在if，for，while里面编写赋值语句
+  "boss": true,
+  // 自定义全局变量，false代表引入的全局变量，true代表自定义的全局变量
+  // 使用console也会提醒未定义,解决方法添加global
+  // /*global console: false */
+  "globals": {
+    "console": false,
+    "alert": false,
+    "$": false
+  }
+}

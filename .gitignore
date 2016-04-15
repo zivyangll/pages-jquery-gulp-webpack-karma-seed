@@ -1,0 +1,15 @@
+/node_modules
+/test/coverage
+/test/index.html
+.svn/
+.DS_Store
+*.log*
+*.sublime-project
+*.sublime-workspace
+.idea
+*~
+*.iml
+*.pyc
+.tags
+.gemtags
+.tags_sorted_by_file

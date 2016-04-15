@@ -24,7 +24,7 @@ var revTask = { // 修改html中引用文件的版本，以及js和css文件中s
   html: function() {
     gulp.src(['dist/**/*.json', 'src/app/*.jade'])
       .pipe(revCollector({ replaceReved: true }))
-      .pipe(jade())
+      .pipe(jade({ pretty: true}))
       .pipe(htmlmin({ collapseWhitespace: true }))
       .pipe(gulp.dest('dist/app'));
   },

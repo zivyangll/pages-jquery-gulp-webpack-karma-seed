@@ -5,11 +5,8 @@ var gulp = require('gulp'),
   sourcemaps = require('gulp-sourcemaps'), // 生成sourcemap
   autoprefixer = require('gulp-autoprefixer'), // css前缀
   imagemin = require('gulp-imagemin'), // 最小化图片
-  gutil = require('gulp-util') , // 如果有自定义方法，可能会用到
+  gutil = require('gulp-util'), // 如果有自定义方法，可能会用到
   shell = require("gulp-shell"), // 执行shell命令
-  rev = require('gulp-rev'), // 添加md5
-  revDel = require('rev-del'), // 删除md5冗余文件
-  revCollector = require('gulp-rev-collector'), //替换html，css，js中引用的文件名
   htmlmin = require('gulp-htmlmin'), // 压缩html
   clean = require('gulp-clean'), // 清理文件夹
   webserver = require('gulp-webserver'), // 静态文件服务器
@@ -20,42 +17,12 @@ var gulp = require('gulp'),
   webpack = require('webpack'), // 使用webpack打包工具
   webpackConfig = require('./webpack.config.js');
 
-var revTask = { // 修改html中引用文件的版本，以及js和css文件中sourcemap文件的版本
-  html: function() {
-    gulp.src(['dist/**/*.json', 'src/app/*.jade'])
-      .pipe(revCollector({ replaceReved: true }))
-      .pipe(jade({ pretty: true}))
-      .pipe(htmlmin({ collapseWhitespace: true }))
-      .pipe(gulp.dest('dist/app'));
-  },
-  css: function() {
-    gulp.src(['dist/styles/*.json', 'dist/styles/*.css'])
-      .pipe(revCollector({ replaceReved: true }))
-      .pipe(gulp.dest('dist/styles'));
-  }
-};
-// 第一次运行default依赖其他任务完成，效率低，下面三个任务会单独抽出来执行
-gulp.task('htmlrev', ['styles', 'scripts'], function() {
-  revTask.html();
-  revTask.css();
-});
-
 // 监测html时修改html
 gulp.task('html', function() {
-  revTask.html();
-  gulp.watch(['dist/**', 'test/index.html']).on('change', livereload.changed);
-});
-
-// 监测样式时修改html
-gulp.task('htmlcss', ['styles'], function() { // 监测css文件改变时依赖styles任务
-  revTask.html();
-  revTask.css();
-  gulp.watch(['dist/**', 'test/index.html']).on('change', livereload.changed);
-});
-
-// 监测脚本时修改html
-gulp.task('htmljs', ['scripts'], function() { // 监测js文件改变时依赖scripts任务
-  gulp.watch(['dist/**', 'test/index.html']).on('change', livereload.changed);
+  return gulp.src('src/app/*.jade')
+    .pipe(jade({ pretty: true }))
+    .pipe(htmlmin({ collapseWhitespace: true }))
+    .pipe(gulp.dest('dist/app'));
 });
 
 // 样式处理
@@ -65,11 +32,7 @@ gulp.task('styles', function() {
     .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError)) // 编译sass，压缩
     .pipe(autoprefixer({ browsers: ['last 4 versions'], cascade: false })) // 生成前缀
     .pipe(sourcemaps.write('.')) // 输出sourcemaps
-    .pipe(rev())
     .pipe(gulp.dest('dist/styles')) // 输出css和map文件
-    .pipe(rev.manifest('css-manifest.json'))
-    .pipe(revDel({ dest: 'dist/styles' }))
-    .pipe(gulp.dest('dist/styles')) // 输出rev对应文件，必须和revDel的目录一致才可以。
     .pipe(notify({ message: '样式完成' })); // 提示
 });
 
@@ -78,11 +41,13 @@ var myDevConfig = Object.create(webpackConfig);
 var devCompiler = webpack(myDevConfig);
 gulp.task('scripts', function(callback) {
   devCompiler.run(function(err, stats) {
-        if(err) throw new gutil.PluginError("webpack:scripts", err);
-        gutil.log("[webpack:scripts]", stats.toString({
-            colors: true
-        }));
-        callback();
+    if (err) {
+      throw new gutil.PluginError("webpack:scripts", err);
+    }
+    gutil.log("[webpack:scripts]", stats.toString({
+      colors: true
+    }));
+    callback();
   });
 });
 
@@ -102,13 +67,13 @@ gulp.task('images', function() {
 });
 
 // 字体处理
-gulp.task('copyfont',function(){
+gulp.task('copyfont', function() {
   return gulp.src('src/fonts/*')
-     .pipe(gulp.dest('dist/fonts'));
+    .pipe(gulp.dest('dist/fonts'));
 });
 
 // 静态文件服务器
-gulp.task('webserver', ['htmlrev'], function() {
+gulp.task('webserver', ['images', 'copyfont', 'styles', 'scripts', 'html'], function() {
   gulp.src('')
     .pipe(webserver({
       port: 8888,
@@ -126,7 +91,6 @@ gulp.task('test', function(done) {
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
   }, done).start();
-  console.log('http://localhost:8888/test/index.html');
 });
 
 // 清理
@@ -137,7 +101,7 @@ gulp.task('clean', function() {
 
 // 默认任务
 gulp.task('default', ['clean'], function() {
-  gulp.start('images', 'copyfont','webserver');
+  gulp.start('webserver');
 });
 
 // 动态跟踪
@@ -146,11 +110,12 @@ gulp.task('watch', function() {
   // 看守所有html档
   gulp.watch('src/app/*.jade', ['html']);
   // 看守所有.scss档
-  gulp.watch('src/styles/**/*.scss', ['styles', 'htmlcss']);
+  gulp.watch('src/styles/**', ['styles']);
   // 看守所有.js档
-  gulp.watch('src/scripts/**/*.js', ['scripts', 'htmljs']);
+  gulp.watch('src/scripts/**', ['scripts']);
   // 看守所有图片档
-  gulp.watch('src/images/**/*', ['images']);
+  gulp.watch('src/images/**', ['images']);
   // 看守所有位在 dist/  目录下的档案，一旦有更动，便进行重整
   livereload.listen();
+  gulp.watch(['dist/**', 'test/index.html']).on('change', livereload.changed);
 });

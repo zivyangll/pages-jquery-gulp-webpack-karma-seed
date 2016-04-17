@@ -12,7 +12,6 @@ pages-jquery-gulp-webpack-karma
 - 支持es6：    babel
 - 支持scss：   gulp-sass
 - 支持jade     gulp-jade
-- 支持md5：    gulp-rev & rev-del &  gulp-rev-collector
 - 支持压缩：    gulp-htmlmin & Uglify
 - 支持自动刷新： livereload
 - 支持css前缀： gulp-autoprefixer

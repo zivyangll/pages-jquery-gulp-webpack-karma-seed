@@ -12,7 +12,6 @@ var gulp = require('gulp'),
   webserver = require('gulp-webserver'), // 静态文件服务器
   notify = require('gulp-notify'), // 桌面通知
   cache = require('gulp-cache'), // 只压缩修改的图片，没有修改的图片直接从缓存文件读取
-  livereload = require('gulp-livereload'), // 自动刷新
   Server = require('karma').Server, // karma测试
   webpack = require('webpack'), // 使用webpack打包工具
   webpackConfig = require('./webpack.config.js');
@@ -115,7 +114,4 @@ gulp.task('watch', function() {
   gulp.watch('src/scripts/**', ['scripts']);
   // 看守所有图片档
   gulp.watch('src/images/**', ['images']);
-  // 看守所有位在 dist/  目录下的档案，一旦有更动，便进行重整
-  livereload.listen();
-  gulp.watch(['dist/**', 'test/index.html']).on('change', livereload.changed);
 });

@@ -47,5 +47,6 @@
     "karma-jasmine": "^0.3.8",
     "karma-webpack": "^1.7.0",
     "webpack": "^1.12.15"
-  }
+  },
+  "dependencies": {}
 }

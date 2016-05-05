@@ -26,7 +26,7 @@ gulp.task('html', function() {
 
 // 样式处理
 gulp.task('styles', function() {
-  return gulp.src('src/styles/index.scss') // 转换为数据流
+  return gulp.src('src/styles/*.scss') // 转换为数据流
     .pipe(sourcemaps.init()) // 生成sourcemaps
     .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError)) // 编译sass，压缩
     .pipe(autoprefixer({ browsers: ['last 4 versions'], cascade: false })) // 生成前缀

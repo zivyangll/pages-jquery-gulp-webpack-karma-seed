@@ -71,8 +71,15 @@ gulp.task('copyfont', function() {
     .pipe(gulp.dest('dist/fonts'));
 });
 
+// favicon复制
+gulp.task('favicon', function() {
+  return gulp.src('src/favicon.ico')
+    .pipe(gulp.dest('dist'));
+});
+
+
 // 静态文件服务器
-gulp.task('webserver', ['images', 'copyfont', 'styles', 'scripts', 'html'], function() {
+gulp.task('webserver', ['images', 'copyfont', 'favicon', 'styles', 'scripts', 'html'], function() {
   gulp.src('')
     .pipe(webserver({
       port: 8888,

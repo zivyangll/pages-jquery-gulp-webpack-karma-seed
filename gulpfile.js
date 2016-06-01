@@ -114,7 +114,7 @@ gulp.task('default', ['clean'], function() {
 gulp.task('watch', function() {
   gulp.start('default');
   // 看守所有html档
-  gulp.watch('src/app/*.jade', ['html']);
+  gulp.watch('src/app/**/*.jade', ['html']);
   // 看守所有.scss档
   gulp.watch('src/styles/**', ['styles']);
   // 看守所有.js档

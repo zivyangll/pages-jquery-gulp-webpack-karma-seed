@@ -65,6 +65,12 @@ gulp.task('images', function() {
     }));
 });
 
+// 不需要编译的文件直接复制，包括独立的外部系统页面
+gulp.task('static', function() {
+  return gulp.src('src/static/**')
+    .pipe(gulp.dest('dist/static'));
+});
+
 // 字体处理
 gulp.task('copyfont', function() {
   return gulp.src('src/fonts/*')
@@ -79,7 +85,7 @@ gulp.task('favicon', function() {
 
 
 // 静态文件服务器
-gulp.task('webserver', ['images', 'copyfont', 'favicon', 'styles', 'scripts', 'html'], function() {
+gulp.task('webserver', ['images', 'copyfont', 'static', 'favicon', 'styles', 'scripts', 'html'], function() {
   gulp.src('')
     .pipe(webserver({
       port: 8888,
@@ -121,4 +127,6 @@ gulp.task('watch', function() {
   gulp.watch('src/scripts/**', ['scripts']);
   // 看守所有图片档
   gulp.watch('src/images/**', ['images']);
+  // 看守所有的不需要编译的文件
+  gulp.watch('src/static/**', ['static']);
 });

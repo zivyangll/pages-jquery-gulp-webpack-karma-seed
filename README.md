@@ -58,6 +58,8 @@ pages-jquery-gulp-webpack-karma
   -- app： jade页面
 	
   -- fonts: 字体文件
+  
+  -- static 不需要编译的文件，如html/css，常用来保存独立的外部系统
 
 -- test 项目测试
 > -- coverage 覆盖率检测，结果在./coverage/**/index.html中
@@ -82,3 +84,5 @@ License
 [Github]: https://github.com/yllziv
 [home]: http://www.yanglonglong.com
 [Email]: me@yanglonglong.com
+
+
